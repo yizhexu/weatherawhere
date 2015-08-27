@@ -17,8 +17,8 @@ get_token <- function(consumer_key, consumer_secret) {
              paste("API call failed. \nStatus", response$status),
              paste("API call success! \nAPI Access token will expire at:", expire_time, Sys.timezone(),"\n")))
 
-  Token <<- paste0("Bearer ", httr::content(response)$access_token)
+  token <<- paste0("Bearer ", httr::content(response)$access_token)
 
-  Token
+  token
 
 }
