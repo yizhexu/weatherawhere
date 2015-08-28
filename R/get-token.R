@@ -6,7 +6,7 @@ get_token <- function(consumer_key, consumer_secret) {
 
   body <- list(grant_type = "client_credentials")
 
-  response <- httr::POST(url_token, httr::verbose(),
+  response <- httr::POST(url_token,
                          httr::authenticate(consumer_key, consumer_secret, type = "basic"),
                          encode = "form",
                          body = body)
