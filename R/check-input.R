@@ -11,9 +11,9 @@ check_input <- function(token, start_date) {
   } else {
 
     # heads up about forecast data
-    forecast <- as.numeric(Sys.Date() - as.Date(start_date)) - 1
+    forecast <- as.numeric(Sys.Date() - as.Date(start_date)) + 1
 
-    if ( forecast > 0 ) cat("The result will include", forecast, "days of forecasting data\n")
+    if ( forecast < 9 ) cat("The result will include", 8 - forecast, "days of forecasting data\n")
 
   }
 }
