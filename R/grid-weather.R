@@ -10,6 +10,8 @@ grid_weather <- function(latitude, longitude, x, y, start_date, token, options) 
           sep = "=", collapse = "&")
   }))
 
+  if(length(options) > 0 )
+
   registerDoParallel(detectCores())
 
   foreach(i = 1:dim(strquery)[1], .combine = 'rbind')  %:%

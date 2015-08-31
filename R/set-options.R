@@ -1,32 +1,34 @@
-get_attribute <- function(type = "all") {
+set_attribute <- function(type = "all") {
+
+  # list of all available attributes
+  attribute <- c('minTemperature','maxTemperature','precip','accPrecip','accPrecipPriorYear','accPrecip3YearAverage','accPrecipLongTermAverage','solar', 'minHumidity','maxHumidity','mornWind','maxWind','gdd','accGdd','accGddPriorYear','accGdd3YearAverage','accGddLongTermAverage','pet','accPet','ppet')
 
   type <- tolower(type)
   type <- ifelse(nchar(type) > 4, substr(type, 1, 4), type)
 
-  attribute <- c('minTemperature','maxTemperature','precip','accPrecip','accPrecipPriorYear','accPrecip3YearAverage','accPrecipLongTermAverage','solar', 'minHumidity','maxHumidity','mornWind','maxWind','gdd','accGdd','accGddPriorYear','accGdd3YearAverage','accGddLongTermAverage','pet','accPet','ppet')
-
   match <- grep(paste0(type, sep = "", collapse = "+"), tolower(attribute))
 
-  if(type == "all") {
-    attribute
+  if ("all" %in% type) {
+    att <- attribute
   } else if (length(match) == 0) {
     stop("No valid attributes found. Type in get_attribute() for all available attributes")
   } else {
-    attribute[match]
+    att <- attribute[match]
   }
+
+  query <- paste("attribute", att, sep = "=", collapse = "&")
+  structure(query, class = "query")
 }
 
-set_options <- function(x, input) {
-  query <- if(x = "attribute") {
-    paste("attribute", input, sep = "=", collapse = "&")
-  } else {
-    paste()
-  }
+set_attribute(c("acc", "pet"))
+set_attribute()
+
+set_date <- function(start_date, end_date, plant_date) {
+
 }
 
-structure(parameter, class = "parameter")
+get_options <- function(end_date, plant_date, temperature, gdd) {
+  if (!lubridate::is.Date(as.Date(end_date, "%Y-%m-%d")))
 
-parameter <- get_parameter("weather_observed")
-parameter$attribute$pet
 
-class(parameter$attribute)
+}
