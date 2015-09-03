@@ -7,7 +7,7 @@ get_weather <- function(token, strquery) {
   if ( request$status != 200 ) {
     cat(paste("API call failed. \nStatus", request$status))
   } else {
-    cat(paste("API call success! \n"))
+    # cat(paste("API call success! \n"))
     data <- jsonlite::fromJSON(httr::content(request, as = "text"))
 
     data.frame(latitude = data$latitude,

@@ -1,7 +1,5 @@
 grid_weather <- function(latitude, longitude, x, y, start_date, token, options) {
 
-  check_input(token, start_date)
-
   grid <- get_grid(latitude, longitude, x, y)
 
   strquery <- outer(1:x, 1:y, Vectorize(function(x, y) {

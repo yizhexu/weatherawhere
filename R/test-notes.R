@@ -4,13 +4,16 @@ library(magrittr)
 library(doParallel)
 library(foreach)
 library(lubridate)
+library(devtools)
 
-source("./R/get-token.R")
-source("./R/get-grid.R")
-source("./R/get-weather.R")
-source("./R/grid-weather.R")
-source("./R/observed-weather.R")
-source("./R/check-input.R")
+devtools::source_url("https://gist.github.com/yizhexu/1ac57e64f309fd16d2e2/raw/1223e9397a0e7595d0b033d2043fd2b888fc566a/get-token.R")
+devtools::source_url("https://gist.github.com/yizhexu/1ac57e64f309fd16d2e2/raw/1223e9397a0e7595d0b033d2043fd2b888fc566a/get-grid.R")
+devtools::source_url("https://gist.githubusercontent.com/yizhexu/1ac57e64f309fd16d2e2/raw/bb23f5e9fc5d37afb7f7052421191526f5cc1d5a/get-weather.R")
+devtools::source_url("https://gist.github.com/yizhexu/1ac57e64f309fd16d2e2/raw/1223e9397a0e7595d0b033d2043fd2b888fc566a/grid-weather.R")
+devtools::source_url("https://gist.github.com/yizhexu/1ac57e64f309fd16d2e2/raw/1223e9397a0e7595d0b033d2043fd2b888fc566a/observed-weather.R")
+devtools::source_url("https://gist.github.com/yizhexu/1ac57e64f309fd16d2e2/raw/1223e9397a0e7595d0b033d2043fd2b888fc566a/check-input.R")
+
+sessionInfo()
 
 get_token("yizhexu@awhere.com", "181225tiancai@X")
 
@@ -33,6 +36,7 @@ strquery <- outer(1:x, 1:y, Vectorize(function(x, y) {
 #### bench marking multiple api calls ####
 
 # the for loop way
+
 query_forloop <- function(strquery, token) {
   data <- data.frame()
   for (i in 1:dim(strquery)[1]) {
@@ -64,9 +68,18 @@ query_par <- function(strquery, token) {
 
 library(microbenchmark)
 
-mb <- microbenchmark(query_forloop(strquery, token), query_lapply(strquery, token), query_par(strquery, token), times = 20L, unit = "relative")
+mb <- microbenchmark(query_forloop(strquery, token), query_lapply(strquery, token), query_par(strquery, token), times = 100L)
 
-print(mb)
-boxplot(mb)
-autoplot(mb)
-ggplot2::qplot(y = time, data = mb, color = expr) + scale_y_log10()
+save(mb, file = "mb-ht-off.RData")
+
+mb <- cbind(mb, ht = rep("on"))
+mb <- cbind(mb, console = rep(FALSE))
+mb_all <- rbind(mb_all, mb)
+
+mb_all$expr <- plyr::revalue(mb_all$expr, c("query_forloop(strquery, token)" = "forloop", "query_lapply(strquery, token)" = "lapply", "query_par(strquery, token)" = "par"))
+
+library(ggplot2)
+ggplot(mb_all, aes(x = expr, y = time)) + geom_violin() + facet_grid(~ht+console)
+
+ggplot(mb_all, aes(x = ht, y = time)) + geom_violin() + facet_grid(~expr+console)
+
