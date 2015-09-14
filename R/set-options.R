@@ -23,32 +23,29 @@ get_attribute <- function(type = NULL) {
 
 set_date <- function(start_date, end_date = NULL, plant_date = NULL) {
 
-  start_date <- if(missing(start_date)) {
-    stop("Start date is a required input")
-  } else {
-    check_date(start_date)
-    as.character(start_date)
-  }
+  if(missing(start_date)) stop("Start date is a required input")
 
   end_date <- if(!is.null(end_date)) {
     check_date(end_date)
     as.character(end_date)
   } else {
     as.character(as.Date(start_date, "%Y-%m-%d") + 14)
+
   }
 
   plant_date <- if(!is.null(plant_date)) {
     check_date(plant_date)
     as.character(plant_date)
   } else {
-    as.character(as.Date(start_date, "%Y-%m-%d") + 14)
+    NULL
   }
 
-  date <- if(as.Date(end_date, "%Y-%m-%d") - as.Date(start_date, "%Y-%m-%d") > 366) {
-   date_range(start_date, end_date)
+  if(!is.null(end_date) & as.Date(end_date, "%Y-%m-%d") - as.Date(start_date, "%Y-%m-%d") > 366) {
+    cbind(date_range(start_date, end_date), plantDate = plant_date)
+  } else {
+    cbind(startDate = start_date, endDate = end_date, plantDate = plant_date)
   }
 
-  c(startDate = start_date, endDate = end_date, plantDate = plant_date)
 }
 
 start_date <- "2013-05-15"

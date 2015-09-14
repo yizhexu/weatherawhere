@@ -17,14 +17,21 @@ create_query <- function(latitude, longitude, x = NULL, y = NULL, date = NULL, a
   str_att <- if(!is.null(attribute)) paste0("&", paste("attribute", attribute, sep = "=", collapse = "&"))
 
   str_date <- if(!is.null(date)) {
-    paste0("&", paste(names(date), date, sep = "=", collapse = "&"))
+
+    paste0("&", sapply(1:dim(date)[1], function(i) {
+      paste(colnames(date), date[i,, drop = TRUE], sep = "=", collapse = "&")
+    }))
+
   } else {
-    paste0("&", paste("startDate", set_date(Sys.Date()), sep = "=", collapse = "&"))
+    paste0("&", paste(colnames(date), set_date(as.character(Sys.Date())), sep = "=", collapse = "&"))
   }
 
   str_gdd <- if(!is.null(gdd_method)) paste0("&", paste(names(gdd_method), gdd_method, sep = "=", collapse = "&"))
 
-  query <- paste0(str_loc, str_att, str_date, str_gdd)
+  str_p2 <- paste0(str_att, str_date, str_gdd)
+
+  query <- unlist(as.list(outer(str_loc, str_p2, paste0)))
+
   structure(query, class = "query")
 }
 
