@@ -21,7 +21,8 @@ latitude = 40
 longitude = -105
 x = 5
 y = 5
-start_date = "2015-08-27"
+start_date = "2010-08-27"
+end_date = "2015-09-04"
 
 check_input(token, start_date)
 

@@ -1,19 +1,27 @@
-check_input <- function(token, start_date) {
+check_date <- function(date) {
   # parameter validation
-  if ( !"token" %in% ls() ) {
+  if ( !lubridate::is.Date(as.Date(date, "%Y-%m-%d")) ) {
+    stop("Date has to be ISO-8601 formatted date in format: YYYY-MM-DD")
+  }
+}
+
+check_token <- function(token) {
+  # parameter validation
+  if ( missing(token) | "expire_time" %in% ls()) {
     stop("All regular API requests require a token. Use get_token() to get one")
   } else if (expire_time < Sys.time())  {
     stop("All API tokens expire after an hour. Use get_token() to get one")
-  } else if ( is.numeric(latitude) == FALSE | is.numeric(latitude) == FALSE ) {
+  }
+}
+
+check_location <- function(coordinate) {
+  if ( is.numeric(coordinate) == FALSE | is.numeric(coordinate) == FALSE ) {
     stop("Latitude and longitude has to be decimal-formatted numbers")
-  } else if ( !lubridate::is.Date(as.Date(start_date, "%Y-%m-%d")) ) {
-    stop("Start date has to be ISO-8601 formatted date in format: YYYY-MM-DD")
-  } else {
+  }
+}
 
-    # heads up about forecast data
-    forecast <- as.numeric(Sys.Date() - as.Date(start_date)) + 1
-
-    if ( forecast < 9) cat("The result will include", 8 - forecast, "days of forecasting data\n")
-
+check_query <- function(strquery) {
+  if ( class(strquery) != "query" ) {
+    stop("Invalid type of query string")
   }
 }

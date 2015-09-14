@@ -1,34 +1,73 @@
-set_attribute <- function(type = "all") {
+get_attribute <- function(type = NULL) {
 
   # list of all available attributes
   attribute <- c('minTemperature','maxTemperature','precip','accPrecip','accPrecipPriorYear','accPrecip3YearAverage','accPrecipLongTermAverage','solar', 'minHumidity','maxHumidity','mornWind','maxWind','gdd','accGdd','accGddPriorYear','accGdd3YearAverage','accGddLongTermAverage','pet','accPet','ppet')
 
-  type <- tolower(type)
-  type <- ifelse(nchar(type) > 4, substr(type, 1, 4), type)
-
-  match <- grep(paste0(type, sep = "", collapse = "+"), tolower(attribute))
-
-  if ("all" %in% type) {
-    att <- attribute
-  } else if (length(match) == 0) {
-    stop("No valid attributes found. Type in get_attribute() for all available attributes")
+  type <- if (is.null(type)) {
+    "all"
   } else {
-    att <- attribute[match]
+    ifelse(nchar(type) > 4, substr(type, 1, 4), type)
   }
 
-  query <- paste("attribute", att, sep = "=", collapse = "&")
-  structure(query, class = "query")
+  type <- ifelse(nchar(type) > 4, substr(type, 1, 4), type)
+
+  match <- grep(paste(type, sep = "", collapse = "+"), tolower(attribute))
+
+  if ("all" %in% type) {
+    attribute
+  } else {
+    attribute[match]
+  }
+
 }
 
-set_attribute(c("acc", "pet"))
-set_attribute()
+set_date <- function(start_date, end_date = NULL, plant_date = NULL) {
 
-set_date <- function(start_date, end_date, plant_date) {
+  start_date <- if(missing(start_date)) {
+    stop("Start date is a required input")
+  } else {
+    check_date(start_date)
+    as.character(start_date)
+  }
 
+  end_date <- if(!is.null(end_date)) {
+    check_date(end_date)
+    as.character(end_date)
+  } else {
+    as.character(as.Date(start_date, "%Y-%m-%d") + 14)
+  }
+
+  plant_date <- if(!is.null(plant_date)) {
+    check_date(plant_date)
+    as.character(plant_date)
+  } else {
+    as.character(as.Date(start_date, "%Y-%m-%d") + 14)
+  }
+
+  date <- if(as.Date(end_date, "%Y-%m-%d") - as.Date(start_date, "%Y-%m-%d") > 366) {
+   date_range(start_date, end_date)
+  }
+
+  c(startDate = start_date, endDate = end_date, plantDate = plant_date)
 }
 
-get_options <- function(end_date, plant_date, temperature, gdd) {
-  if (!lubridate::is.Date(as.Date(end_date, "%Y-%m-%d")))
+start_date <- "2013-05-15"
+end_date <- "2015-06-15"
+plant_date <- "2014-05-20"
 
+set_gdd <- function(temperature_unit = c("celsius", "fahrenheit"),
+                    gdd_method = c(NULL, "min-temp", "modifiedstandard", "min-cap"),
+                    base_temp = NULL, max_tempcap = NULL, min_tempcap = NULL) {
 
+  temperature_unit <- if(missing(temperature_unit)) {
+    NULL
+  } else if (temperature_unit == "celsius") {
+    NULL
+  } else {
+    "fahrenheit"
+  }
+
+  gdd_method <- ifelse(missing(gdd_method), "min-temp", gdd_method)
+
+  c(temperatureUnits = temperature_unit, gddMethod = gdd_method, baseTemp = base_temp, maxTempCap = max_tempcap, minTempCap = min_tempcap)
 }
