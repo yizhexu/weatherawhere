@@ -22,17 +22,8 @@ longitude = -105
 x = 5
 y = 5
 start_date = "2010-08-27"
-end_date = "2015-09-04"
+end_date = "2011-09-04"
 
-check_input(token, start_date)
-
-grid <- get_grid(latitude, longitude, x, y)
-
-strquery <- outer(1:x, 1:y, Vectorize(function(x, y) {
-  paste(c("latitude", "longitude", "startDate"),
-        c(grid$latitudes[x], grid$longitudes[y], start_date),
-        sep = "=", collapse = "&")
-}))
 
 #### bench marking multiple api calls ####
 
@@ -84,3 +75,21 @@ ggplot(mb_all, aes(x = expr, y = time)) + geom_violin() + facet_grid(~ht+console
 
 ggplot(mb_all, aes(x = ht, y = time)) + geom_violin() + facet_grid(~expr+console)
 
+
+#### weather query ####
+latitude = 40
+longitude = -105
+
+start_date <- "2013-05-15"
+end_date <- "2015-06-15"
+plant_date <- "2013-05-01"
+
+get_attribute(c("^acc", "gdd$"))
+
+get_token("yizhexu@awhere.com", "181225tiancai@X")
+
+query <- create_query(latitude, longitude, date = set_date(start_date, plant_date = plant_date), attribute = get_attribute(c("^acc", "gdd$")), gdd_method = set_gdd(gdd_method = "modifiedstandard"))
+
+query <- create_query(latitude, longitude, date = set_date(start_date), attribute = get_attribute(c("^acc", "gdd$")), gdd_method = set_gdd(gdd_method = "modifiedstandard"))
+
+get_weather(token, query)

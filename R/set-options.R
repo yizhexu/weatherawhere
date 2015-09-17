@@ -9,12 +9,12 @@ get_attribute <- function(type = NULL) {
     ifelse(nchar(type) > 4, substr(type, 1, 4), type)
   }
 
-  type <- ifelse(nchar(type) > 4, substr(type, 1, 4), type)
-
   match <- grep(paste(type, sep = "", collapse = "+"), tolower(attribute))
 
   if ("all" %in% type) {
     attribute
+  } else if (length(match) == 0) {
+    NULL
   } else {
     attribute[match]
   }
@@ -48,9 +48,15 @@ set_date <- function(start_date, end_date = NULL, plant_date = NULL) {
 
 }
 
-start_date <- "2013-05-15"
-end_date <- "2015-06-15"
-plant_date <- "2014-05-20"
+set_grid <- function(latitude, longitude, x, y) {
+  grid <- get_grid(latitude, longitude, x, y)
+
+  outer(1:x, 1:y, Vectorize(function(x, y) {
+    paste(c("latitude", "longitude"),
+          c(grid$latitudes[x], grid$longitudes[y]),
+          sep = "=", collapse = "&")
+  }))
+}
 
 set_gdd <- function(temperature_unit = c("celsius", "fahrenheit"),
                     gdd_method = c(NULL, "min-temp", "modifiedstandard", "min-cap"),

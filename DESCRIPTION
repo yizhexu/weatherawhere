@@ -12,4 +12,5 @@ Imports: httr,
     magrittr,
     doParallel,
     foreach
-Suggests: lubridate
+Suggests: lubridate,
+    testthat
