@@ -1,4 +1,4 @@
-get_line <- function(coordinate, size = NULL, n) {
+get_line <- function(coordinate, n, size = NULL) {
   if(is.null(size)) size <- 5
 
   if (n == 1) {
@@ -12,7 +12,9 @@ get_line <- function(coordinate, size = NULL, n) {
 
 get_grid <- function(latitude, longitude, x, y, size = NULL) {
 # this function will provide centroid lat/lng for x*y grids
-  list("latitudes" = get_line(latitude, size, x),
-       "longitudes" = get_line(longitude, size, y))
+  if(is.null(size)) size <- 5
+
+  list("latitudes" = get_line(latitude, x, size),
+       "longitudes" = get_line(longitude, y, size))
 }
 
