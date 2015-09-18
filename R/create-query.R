@@ -24,7 +24,7 @@
 #' plant_date), attribute = get_attribute(c("^acc", "gdd$")), gdd_method =
 #' set_gdd(gdd_method = "modifiedstandard"))
 
-create_query <- function(latitude, longitude, x = NULL, y = NULL, date = NULL, attribute = NULL, gdd_method = NULL) {
+create_query <- function(latitude, longitude, x = NULL, y = NULL, size = NULL, date = NULL, attribute = NULL, gdd_method = NULL) {
 
   check_location(latitude)
   check_location(longitude)
