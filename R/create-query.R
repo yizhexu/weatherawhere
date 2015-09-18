@@ -32,7 +32,7 @@ create_query <- function(latitude, longitude, x = NULL, y = NULL, date = NULL, a
   if(is.null(x)) x <- 1
   if(is.null(y)) y <- 1
 
-  str_loc <- set_grid(latitude, longitude, x, y)
+  str_loc <- set_grid(latitude, longitude, x, y, size)
 
   str_att <- if(!is.null(attribute)) paste0("&", paste("attribute", attribute, sep = "=", collapse = "&"))
 
