@@ -48,8 +48,8 @@ set_date <- function(start_date, end_date = NULL, plant_date = NULL) {
 
 }
 
-set_grid <- function(latitude, longitude, x, y) {
-  grid <- get_grid(latitude, longitude, x, y)
+set_grid <- function(latitude, longitude, x, y, size = NULL) {
+  grid <- get_grid(latitude, longitude, x, y, size = NULL)
 
   outer(1:x, 1:y, Vectorize(function(x, y) {
     paste(c("latitude", "longitude"),
