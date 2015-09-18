@@ -21,8 +21,8 @@ latitude = 40
 longitude = -105
 x = 5
 y = 5
-start_date = "2010-08-27"
-end_date = "2011-09-04"
+start_date = "2015-05-15"
+end_date = "2015-09-15"
 
 
 #### bench marking multiple api calls ####
@@ -80,11 +80,15 @@ ggplot(mb_all, aes(x = ht, y = time)) + geom_violin() + facet_grid(~expr+console
 latitude = 40
 longitude = -105
 
-start_date <- "2013-05-15"
-end_date <- "2015-06-15"
-plant_date <- "2013-05-01"
+x = 5
+y = 5
 
-get_attribute(c("^acc", "gdd$"))
+start_date = "2015-05-15"
+end_date = "2015-09-15"
+
+# plant_date <- "2013-05-01"
+
+get_attribute(c("^acc+pet$"))
 
 get_token("yizhexu@awhere.com", "181225tiancai@X")
 
