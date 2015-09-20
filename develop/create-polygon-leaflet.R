@@ -35,8 +35,8 @@ calculate_index <- function(start_date, end_date, data) {
 latitude = 40.7127
 longitude = -74.0059
 
-x = 5
-y = 5
+x = 10
+y = 15
 
 start_date_baseline <- "2014-05-15"
 end_date_baseline <- "2014-09-15"
@@ -44,7 +44,7 @@ start_date_target <- "2015-05-15"
 end_date_target <- "2015-09-15"
 
 attribute <- c("accPrecip", "accPet")
-query_baseline <- create_query(latitude, longitude, x, y, size = 5, date = set_date(start_date_baseline, end_date_baseline), attribute = attribute)
+query_baseline <- create_query(latitude, longitude, x, y, size = 1, date = set_date(start_date_baseline, end_date_baseline), attribute = attribute)
 query_target <- create_query(latitude, longitude, x, y, size = 1, date = set_date(start_date_target, end_date_target), attribute = attribute)
 
 get_token("yizhexu@awhere.com", "181225tiancai@X")
@@ -78,26 +78,14 @@ end_date_target <- "2015-09-15"
 baseline_index <- calculate_index(start_date_baseline, end_date_baseline, baseline)
 target_index <- calculate_index(start_date_target, end_date_target, target)
 
-coors <- calculate_coor(start_date_baseline, baseline)
-
-# try for single point
-p = Polygon(coors_poly)
-ps = Polygons(list(p),1)
-sps = SpatialPolygons(list(ps))
-plot(sps)
-
-proj4string(sps) = CRS("+init=epsg:3857")
-
-data = data.frame(index = baseline_index[1])
-spdf = SpatialPolygonsDataFrame(sps,data)
-summary(spdf)
+coors <- calculate_coor(end_date_baseline, baseline)
 
 # try for multiple
-create_poly <- function(latitude, longitude, x) {
-  lat_m <- latitude[x] - 0.5/60
-  lat_p <- latitude[x] + 0.5/60
-  lng_m <- longitude[x] - 0.5/60
-  lng_p <- longitude[x] + 0.5/60
+create_poly <- function(latitude, longitude, x, size = 1) {
+  lat_m <- latitude[x] - size/2/60
+  lat_p <- latitude[x] + size/2/60
+  lng_m <- longitude[x] - size/2/60
+  lng_p <- longitude[x] + size/2/60
 
   p <- Polygon(matrix(c(lng_m, lat_m, lng_p, lat_m, lng_p, lat_p, lng_m, lat_p), ncol = 2, byrow = TRUE))
   Polygons(list(p),x)
